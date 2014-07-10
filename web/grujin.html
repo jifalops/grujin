@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grujin</title>
+    
+    <script src="packages/web_components/platform.js"></script>
+    <script src="packages/web_components/dart_support.js"></script>
+   
+    <!-- import polymer components -->
+    <link rel="import" href="clickcounter.html">
+    <link rel="import" href="packages/core_elements/core_scroll_header_panel.html">
+    <link rel="import" href="packages/core_elements/core_toolbar.html">
+    <link rel="import" href="packages/core_elements/core_icon_button.html">
+    
+    <script type="application/dart">export "package:polymer/init.dart";</script>
+    <script src="packages/browser/dart.js"></script>
+    
+    <link rel="stylesheet" href="grujin.css">
+  </head>
+  <body fullbleed layout vertical>
+    <core-scroll-header-panel flex fixed condenses>
+      <core-toolbar>
+        <core-icon-button icon="menu"></core-icon-button>
+        Grujin
+      </core-toolbar>
+      <div content>
+        Content goes here...
+        <click-counter count="6"></click-counter>
+      </div>
+    </core-scroll-header-panel>
+    
+    
+
+  </body>
+</html>
