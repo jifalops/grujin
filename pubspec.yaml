@@ -8,4 +8,8 @@ dependencies:
     fontawesome_elements: ">=0.0.2 <0.1.0"
 transformers:
 - polymer:
-    entry_points: web/grujin.html
+    entry_points: 
+    - web/grujin.html
+    - web/test.html
+    - web/test2.html
+    csp: false

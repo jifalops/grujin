@@ -1,22 +1,139 @@
-/* body { */
-/*   background-color: #F8F8F8; */
-/*   font-family: 'Open Sans', sans-serif; */
-/*   font-size: 14px; */
-/*   font-weight: normal; */
-/*   line-height: 1.2em; */
-/*   margin: 15px; */
-/* } */
+/*
+	header/toolbar	80
+*/
 
-/* h1, p { */
-/*   color: #333; */
-/* } */
+body {
+  font-family: RobotoDraft;
+}
+core-header-panel {
+  background:#fff;
+}
 
-click-counter {
-  width: 50%;
-  height: 200px;
-/*   position: relative; */
-/*   border: 1px solid #ccc; */
-/*   background-color: #fff; */
+core-header-panel core-menu {
+  padding: 12px 0px 4px 0px;
+}
+
+core-toolbar {
+  background-color: #03A9F4;
+  height: 80px;
+}
+#navheader {
+  background-color: #56BA89;
+}
+/* drawer is always visible on a wide screen so menu button isn't required */
+core-drawer-panel:not([narrow]) #navicon {
+  display: none;
+}
+
+#drawerPanel::shadow #drawer {}
+#drawerPanel::shadow #main {}
+
+.charclass {
+  
+}
+
+/* -- LEFT PANEL MENU -- 
+*/
+#leftpanel {
+  padding: 0px 0px;
+  background:#fff;
+}
+
+#leftpanel paper-item {
+  height: 64px;  
+  margin: 1px;
+  background:#fff;
+}
+
+#leftpanel paper-item paper-icon-button  {
+  opacity: 0.4;  
+}
+
+#leftpanel paper-item paper-input {
+  
+}
+
+#leftpanel .charclass {
+  background:#fff;
+  
+}
+
+#leftpanel .charclass paper-button {
+  height: 40px;
+  width: 40px;
+  padding: 0px 0px;
+  margin: 1px;
+  background:#fff;
 }
 
 
+/* -- OVERFLOW MENU -- 
+*/
+.overflow {
+  font-size:12pt;
+}
+
+/* ====  MAIN   ====
+   ==== CONTENT ====
+*/
+.content {
+  padding: 24px;
+  background:#fff;
+}
+
+.block {
+  padding: 0px 0px;
+  background:#fff;
+}
+
+/* TEXT INPUTS
+*/
+.content paper-input {
+  height: 64px;
+  width: 16em;
+  margin: 1px;
+  background:#fff;
+}
+
+/* PASSWORD OPTIONS 
+*/
+.content paper-slider {
+  height: 64px;
+  padding: 0px 0px;
+  margin: 1px;
+  background:#fff;
+}
+.content .charclass {
+  height: 64px;
+  padding: 0px 0px;
+  margin: 1px;
+  background:#fff;
+}
+.content .charclass paper-button {
+  height: 48px;
+  width: 48px;
+  margin: 1px;
+  background:#fff;
+  font-size:14pt;
+  font-stretch:wider;
+  font-weight: 500;
+}
+
+
+/* SUPER BUTTON 
+*/
+.content .paperfabcont {
+  height: 80px;
+  background:#fff;
+  padding: 0px 40px 0px 0px;  
+}
+
+#paperfab {
+  
+}
+
+
+
+.toast {
+  
+}

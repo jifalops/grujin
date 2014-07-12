@@ -1,38 +1,125 @@
 <!DOCTYPE html>
-
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grujin</title>
-    
-    <script src="packages/web_components/platform.js"></script>
-    <script src="packages/web_components/dart_support.js"></script>
-   
-    <!-- import polymer components -->
-    <link rel="import" href="clickcounter.html">
-    <link rel="import" href="packages/core_elements/core_scroll_header_panel.html">
-    <link rel="import" href="packages/core_elements/core_toolbar.html">
-    <link rel="import" href="packages/core_elements/core_icon_button.html">
-    
-    <script type="application/dart">export "package:polymer/init.dart";</script>
-    <script src="packages/browser/dart.js"></script>
-    
-    <link rel="stylesheet" href="grujin.css">
-  </head>
-  <body fullbleed layout vertical>
-    <core-scroll-header-panel flex fixed condenses>
-      <core-toolbar>
-        <core-icon-button icon="menu"></core-icon-button>
-        Grujin
-      </core-toolbar>
-      <div content>
-        Content goes here...
-        <click-counter count="6"></click-counter>
-      </div>
-    </core-scroll-header-panel>
-    
-    
+<head>
+<script src='packages/web_components/platform.js'></script>
+<script src='packages/web_components/dart_support.js'></script>
 
-  </body>
+<link rel='import' href='packages/core_elements/core_toolbar.html'>
+<link rel='import' href='packages/core_elements/core_menu.html'>
+<link rel='import' href='packages/core_elements/core_item.html'>
+<link rel='import' href='packages/core_elements/core_header_panel.html'>
+<link rel='import' href='packages/core_elements/core_drawer_panel.html'>
+<link rel='import' href='packages/core_elements/core_icons.html'>
+<link rel='import' href='packages/paper_elements/paper_icon_button.html'>
+<link rel='import' href='packages/paper_elements/paper_checkbox.html'>
+<link rel='import' href='packages/paper_elements/paper_button.html'>
+<link rel='import' href='packages/paper_elements/paper_input.html'>
+<link rel='import' href='packages/paper_elements/paper_toast.html'>
+<link rel='import' href='packages/paper_elements/paper_slider.html'>
+<link rel='import' href='packages/paper_elements/paper_fab.html'>
+<link rel='import' href='packages/paper_elements/paper_item.html'>
+<link rel='import' href='packages/paper_elements/paper_menu_button.html'>
+<link rel='import' href='packages/paper_elements/roboto.html'>
+
+<link rel='stylesheet' href='grujin.css' shim-shadowdom>
+
+<script src='packages/browser/dart.js'></script>
+
+<title>Paper Safe</title>
+</head>
+<body fullbleed unresolved>
+
+<core-drawer-panel id='drawerPanel'>
+<core-header-panel drawer>
+
+<core-toolbar id='navheader'>  
+  <span>Design</span>
+</core-toolbar>
+<core-menu>  
+
+<!-- # LEFT PANEL MENU # -->
+<div id='leftpanel'>
+  <paper-item><paper-icon-button icon='unfold-more'></paper-icon-button>
+    <paper-input disabled flex></paper-input>  
+  </paper-item>
+  <paper-item><paper-icon-button icon='unfold-more'></paper-icon-button>
+    <paper-input disabled flex></paper-input>  
+  </paper-item>
+  <paper-item><paper-icon-button icon='unfold-more'></paper-icon-button>
+    <paper-slider disabled flex self-end layout></paper-slider>  
+  </paper-item>
+  <paper-item><paper-icon-button icon='unfold-more'></paper-icon-button>
+    <div class='charclass' flex horizontal center-justified layout center>
+    <paper-button label=' ' disabled></paper-button>
+    <paper-button label=' ' disabled style='text-transform:lowercase;'></paper-button>  
+    <paper-button label=' ' disabled></paper-button>
+    <paper-button label=' ' disabled></paper-button>
+    </div> 
+  </paper-item>  
+</div>
+</core-menu>
+</core-header-panel>
+<core-header-panel main>
+<core-toolbar id='mainheader'>
+  <paper-icon-button id='navicon' icon='menu'></paper-icon-button>
+  <span flex>Paper Safe</span>
+  <paper-menu-button class='overflow' icon='more-vert' halign="right">               
+    
+    <!-- # OVERFLOW MENU # -->    
+    <paper-item><paper-checkbox
+      id='remsecret'
+      label='Remember secret'></paper-checkbox></paper-item>
+    <paper-item><paper-checkbox checked
+      id='rempassoptions'
+      label='Remember settings'></paper-checkbox></paper-item>   
+    <paper-item><paper-checkbox checked
+      id='sync' 
+      label='Sync settings'></paper-checkbox></paper-item>    
+  </paper-menu-button>
+</core-toolbar>
+
+
+
+<!-- ##  MAIN   ## -->
+<!-- ## CONTENT ## -->
+<div class='content' vertical layout center>  
+<div class='block' vertical center-justified layout center>
+  <!-- TEXT INPUTS -->
+  <paper-input id='subject' label='www.example.com' validate='^.{3,}$' error='3 char min'></paper-input>  
+  <paper-input id='secret' label='secret' validate='^.{4,}$' error='4 char min'></paper-input>     
+  
+  <!-- SLIDER -->
+  <paper-slider min='4' max='18' value='12' pin vertical end-justified layout></paper-slider>    
+  
+  <!-- CHARACTER BUTTONS -->
+  <div class='charclass' horizontal center-justified layout center>  
+  <paper-button label='A' horizontal center-justified layout center></paper-button>
+  <paper-button label='a' horizontal center-justified layout center style='text-transform:lowercase;'></paper-button>  
+  <paper-button label='4' horizontal center-justified layout center></paper-button>
+  <paper-button label='@' horizontal center-justified layout center></paper-button>
+  </div>  
+</div>
+
+<!-- SUPER BUTTON -->
+<div class='paperfabcont' horizontal center-justified layout end flex self-end>
+  <paper-fab id='paperfab' icon='lock-outline'></paper-fab>
+</div>           
+
+<!-- BLOODY TOAST -->
+<paper-toast id='toast' class='toast'></paper-toast>
+
+</div>
+</core-header-panel>
+</core-drawer-panel>
+<script>
+  document.addEventListener('polymer-ready', function() {
+    var navicon = document.getElementById('navicon');
+    var drawerPanel = document.getElementById('drawerPanel');
+    navicon.addEventListener('click', function() {
+      drawerPanel.togglePanel();
+    });
+  });
+</script>
+<script type='application/dart' src='grujin.dart'></script>
+</body>
 </html>
