@@ -1,25 +1,45 @@
-/*
-	header/toolbar	80
-*/
 
 body {
-  font-family: RobotoDraft;
+  font-family: RobotoDraft;  
+  background-image: url('images/eggshell.jpg');
+/*   background-size: cover; */
 }
 core-header-panel {
-  background:#fff;
+/* background:#fff; */
 }
 
-core-header-panel core-menu {
+core-header-panel[drawer] {
+  background-image: url('images/eggshell.jpg');
+}
+
+core-header-panel core-menu {  
   padding: 12px 0px 4px 0px;
 }
 
-core-toolbar {
-  background-color: #03A9F4;
+core-toolbar {  
+  background-color: #009688;     
   height: 80px;
 }
-#navheader {
-  background-color: #56BA89;
+
+core-toolbar span {
+  color:#fff;
+/*   opacity: 0.87; */
 }
+
+#navicon, #overflow {
+  fill:#fff; 
+}
+
+
+#navheader {
+  background-color: #00bcd4;
+}
+
+#mainheader {
+  
+}
+
+
 /* drawer is always visible on a wide screen so menu button isn't required */
 core-drawer-panel:not([narrow]) #navicon {
   display: none;
@@ -28,21 +48,18 @@ core-drawer-panel:not([narrow]) #navicon {
 #drawerPanel::shadow #drawer {}
 #drawerPanel::shadow #main {}
 
-.charclass {
-  
-}
+
 
 /* -- LEFT PANEL MENU -- 
 */
 #leftpanel {
-  padding: 0px 0px;
-  background:#fff;
+  /*  background:#fff; */
 }
 
 #leftpanel paper-item {
   height: 64px;  
   margin: 1px;
-  background:#fff;
+  /*  background:#fff; */
 }
 
 #leftpanel paper-item paper-icon-button  {
@@ -50,41 +67,59 @@ core-drawer-panel:not([narrow]) #navicon {
 }
 
 #leftpanel paper-item paper-input {
-  
+  cursor: inherit;
 }
 
 #leftpanel .charclass {
-  background:#fff;
+  /*  background:#fff; */
   
 }
 
 #leftpanel .charclass paper-button {
+  border-radius:50%;
   height: 40px;
   width: 40px;
   padding: 0px 0px;
   margin: 1px;
-  background:#fff;
+  cursor: inherit;
+  /*  background:#fff; */
 }
 
 
 /* -- OVERFLOW MENU -- 
 */
-.overflow {
+#overflow {  
   font-size:12pt;
 }
+
+#overflow paper-item {
+  background-image: url('images/paper.jpg');
+  height: 48px;
+  padding: 16px;
+}
+
+#overflow paper-checkbox::shadow #ink[checked] {    /* remove selectors for unchecked changes */
+  color:#b2dfdb;
+}
+#overflow paper-checkbox::shadow #checkbox.checked {
+  border-color: #ffab40;
+}
+
 
 /* ====  MAIN   ====
    ==== CONTENT ====
 */
 .content {
-  padding: 24px;
-  background:#fff;
+  padding: 24px;  
+  /*  background:#fff; */
 }
 
 .block {
   padding: 0px 0px;
-  background:#fff;
+  /*  background:#fff; */
 }
+
+
 
 /* TEXT INPUTS
 */
@@ -92,31 +127,85 @@ core-drawer-panel:not([narrow]) #navicon {
   height: 64px;
   width: 16em;
   margin: 1px;
-  background:#fff;
+  /*  background:#fff; */
 }
 
-/* PASSWORD OPTIONS 
+.content paper-input::shadow .focusedColor {
+  background:#ffab40;
+}
+
+
+/* PAPER SLIDER
 */
 .content paper-slider {
   height: 64px;
   padding: 0px 0px;
   margin: 1px;
-  background:#fff;
+  /*  background:#fff; */
 }
+
+.content paper-slider::shadow #sliderBar::shadow #activeProgress {
+  background-color: #009688;
+}
+
+.content paper-slider::shadow #sliderKnobInner {
+  background-color: #00796b;
+}
+
+.content paper-slider::shadow #sliderKnobInner::before {
+  background-color: #009688;
+}
+
+
+/* CHARACTER SETS
+*/
 .content .charclass {
   height: 64px;
   padding: 0px 0px;
   margin: 1px;
-  background:#fff;
+  /*  background:#fff; */
 }
+
 .content .charclass paper-button {
+  border-radius:50%;
   height: 48px;
   width: 48px;
   margin: 1px;
-  background:#fff;
   font-size:14pt;
-  font-stretch:wider;
-  font-weight: 500;
+  font-weight: 500; 
+  color: #fff;
+  
+  background: #009688;
+  opacity:0.87;   
+  
+  border:1px solid #ffab40;
+}
+
+.content .charclass paper-button:hover {
+/*     opacity: 1.0; */
+}
+
+.charclass paper-button[inactive] {
+  opacity: 0.54;  
+  border:none;
+}
+
+.charclass paper-button[inactive]:hover {
+/*   opacity: 0.67 */
+}
+
+
+
+.content .charclass paper-button::shadow span {
+  border-radius:50%;
+/*   top:0px; left:0px; bottom:0px; right:0px;   */
+  padding:4px 8px;
+}
+
+
+
+.content .charclass paper-button::shadow #ripple {
+/*     color: #ffd180; */
 }
 
 
@@ -124,12 +213,12 @@ core-drawer-panel:not([narrow]) #navicon {
 */
 .content .paperfabcont {
   height: 80px;
-  background:#fff;
+  /*  background:#fff; */  
   padding: 0px 40px 0px 0px;  
 }
 
-#paperfab {
-  
+paper-fab {
+  background-color: #ff9100;
 }
 
 

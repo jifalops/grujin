@@ -33,17 +33,19 @@
 <core-header-panel drawer>
 
 <core-toolbar id='navheader'>  
-  <span>Design</span>
+  <span>Edit</span>
 </core-toolbar>
 <core-menu>  
 
+
 <!-- # LEFT PANEL MENU # -->
+
 <div id='leftpanel'>
   <paper-item><paper-icon-button icon='unfold-more'></paper-icon-button>
     <paper-input disabled flex></paper-input>  
   </paper-item>
   <paper-item><paper-icon-button icon='unfold-more'></paper-icon-button>
-    <paper-input disabled flex></paper-input>  
+    <paper-input disabled flex></paper-input>
   </paper-item>
   <paper-item><paper-icon-button icon='unfold-more'></paper-icon-button>
     <paper-slider disabled flex self-end layout></paper-slider>  
@@ -63,9 +65,10 @@
 <core-toolbar id='mainheader'>
   <paper-icon-button id='navicon' icon='menu'></paper-icon-button>
   <span flex>Paper Safe</span>
-  <paper-menu-button class='overflow' icon='more-vert' halign="right">               
+  <paper-menu-button id='overflow' icon='more-vert' halign="right">               
     
     <!-- # OVERFLOW MENU # -->    
+    
     <paper-item><paper-checkbox
       id='remsecret'
       label='Remember secret'></paper-checkbox></paper-item>
@@ -82,6 +85,7 @@
 
 <!-- ##  MAIN   ## -->
 <!-- ## CONTENT ## -->
+
 <div class='content' vertical layout center>  
 <div class='block' vertical center-justified layout center>
   <!-- TEXT INPUTS -->
@@ -92,20 +96,20 @@
   <paper-slider min='4' max='18' value='12' pin vertical end-justified layout></paper-slider>    
   
   <!-- CHARACTER BUTTONS -->
-  <div class='charclass' horizontal center-justified layout center>  
-  <paper-button label='A' horizontal center-justified layout center></paper-button>
-  <paper-button label='a' horizontal center-justified layout center style='text-transform:lowercase;'></paper-button>  
-  <paper-button label='4' horizontal center-justified layout center></paper-button>
-  <paper-button label='@' horizontal center-justified layout center></paper-button>
+  <div class='charclass' horizontal center-justified layout center> 
+    <paper-button id='captoggle' label='A' horizontal center-justified layout center></paper-button>
+    <paper-button id='lowtoggle' label='a' horizontal center-justified layout center style='text-transform:lowercase;'></paper-button>  
+    <paper-button id='numtoggle' label='4' horizontal center-justified layout center></paper-button>
+    <paper-button id='symtoggle' label='@' horizontal center-justified layout center></paper-button>
   </div>  
 </div>
 
 <!-- SUPER BUTTON -->
 <div class='paperfabcont' horizontal center-justified layout end flex self-end>
-  <paper-fab id='paperfab' icon='lock-outline'></paper-fab>
+  <paper-fab id='paperfab' icon='chevron-right'></paper-fab>
 </div>           
 
-<!-- BLOODY TOAST -->
+<!-- TOAST -->
 <paper-toast id='toast' class='toast'></paper-toast>
 
 </div>
