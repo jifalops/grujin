@@ -10,6 +10,7 @@
 <link rel='import' href='packages/core_elements/core_header_panel.html'>
 <link rel='import' href='packages/core_elements/core_drawer_panel.html'>
 <link rel='import' href='packages/core_elements/core_icons.html'>
+<link rel='import' href='packages/core_elements/core_transition.html'>
 <link rel='import' href='packages/paper_elements/paper_icon_button.html'>
 <link rel='import' href='packages/paper_elements/paper_checkbox.html'>
 <link rel='import' href='packages/paper_elements/paper_button.html'>
@@ -18,6 +19,8 @@
 <link rel='import' href='packages/paper_elements/paper_slider.html'>
 <link rel='import' href='packages/paper_elements/paper_fab.html'>
 <link rel='import' href='packages/paper_elements/paper_item.html'>
+<link rel='import' href='packages/paper_elements/paper_dialog.html'>
+<link rel='import' href='packages/paper_elements/paper_shadow.html'>
 <link rel='import' href='packages/paper_elements/paper_menu_button.html'>
 <link rel='import' href='packages/paper_elements/roboto.html'>
 
@@ -69,11 +72,15 @@
     
     <!-- # OVERFLOW MENU # -->    
     
+<!--     TODO 2-item list -->
     <paper-item><paper-checkbox
       id='remsecret'
       label='Remember secret'></paper-checkbox></paper-item>
+    <paper-item><paper-checkbox
+      id='fulldomain'
+      label='Use full domain'></paper-checkbox></paper-item>
     <paper-item><paper-checkbox checked
-      id='rempassoptions'
+      id='remsettings'
       label='Remember settings'></paper-checkbox></paper-item>   
     <paper-item><paper-checkbox checked
       id='sync' 
@@ -105,12 +112,17 @@
 </div>
 
 <!-- SUPER BUTTON -->
-<div class='paperfabcont' horizontal center-justified layout end flex self-end>
+<div class='paperfabcont' horizontal end-justified layout end>
+  <paper-input flex id='password' vertical center-justified layout end value='asdfpaoim30j'></paper-input>
   <paper-fab id='paperfab' icon='chevron-right'></paper-fab>
-</div>           
+</div>     
 
+    
 <!-- TOAST -->
 <paper-toast id='toast' class='toast'></paper-toast>
+
+
+ 
 
 </div>
 </core-header-panel>

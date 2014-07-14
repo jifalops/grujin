@@ -209,12 +209,26 @@ core-drawer-panel:not([narrow]) #navicon {
 }
 
 
-/* SUPER BUTTON 
+/* PASSWORD & SUPER BUTTON 
 */
-.content .paperfabcont {
+.paperfabcont {
   height: 80px;
-  /*  background:#fff; */  
+  width:100%; 
   padding: 0px 40px 0px 0px;  
+}
+
+paper-input#password {
+  height:56px;  
+  width:16em;
+  font-size:14pt;
+  padding: 0px 8px;
+  margin: 1px 16px;  
+  display:none;
+/*   overflow:scroll; */
+}
+
+paper-input#password::shadow #input {
+  text-align: center;
 }
 
 paper-fab {
