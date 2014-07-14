@@ -4,12 +4,11 @@ dependencies:
     polymer: ">=0.11.0 <0.12.0"
     core_elements: ">=0.0.6 <0.1.0"
     paper_elements: ">=0.0.1 <0.1.0"
-    html_components: any
-    fontawesome_elements: ">=0.0.2 <0.1.0"
+    crypto: ">=0.9.0"
+    cipher: ">=0.7.0 <0.8.0"
+    lawndart: ">=0.6.5 <0.7.0"
 transformers:
 - polymer:
     entry_points: 
     - web/grujin.html
-    - web/test.html
-    - web/test2.html
     csp: false

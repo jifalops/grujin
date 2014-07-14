@@ -76,9 +76,9 @@
     <paper-item><paper-checkbox
       id='remsecret'
       label='Remember secret'></paper-checkbox></paper-item>
-    <paper-item><paper-checkbox
-      id='fulldomain'
-      label='Use full domain'></paper-checkbox></paper-item>
+<!--     <paper-item><paper-checkbox -->
+<!--       id='fulldomain' -->
+<!--       label='Use full domain'></paper-checkbox></paper-item> -->
     <paper-item><paper-checkbox checked
       id='remsettings'
       label='Remember settings'></paper-checkbox></paper-item>   
@@ -100,7 +100,7 @@
   <paper-input id='secret' label='secret' validate='^.{4,}$' error='4 char min'></paper-input>     
   
   <!-- SLIDER -->
-  <paper-slider min='4' max='18' value='12' pin vertical end-justified layout></paper-slider>    
+  <paper-slider id='passlen' min='4' max='18' value='12' pin vertical end-justified layout></paper-slider>    
   
   <!-- CHARACTER BUTTONS -->
   <div class='charclass' horizontal center-justified layout center> 
@@ -113,7 +113,7 @@
 
 <!-- SUPER BUTTON -->
 <div class='paperfabcont' horizontal end-justified layout end>
-  <paper-input flex id='password' vertical center-justified layout end value='asdfpaoim30j'></paper-input>
+  <paper-input flex id='password' vertical center-justified layout end></paper-input>
   <paper-fab id='paperfab' icon='chevron-right'></paper-fab>
 </div>     
 
