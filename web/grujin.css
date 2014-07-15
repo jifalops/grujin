@@ -92,7 +92,7 @@ core-drawer-panel:not([narrow]) #navicon {
   font-size:12pt;
 }
 
-#overflow paper-item {
+#overflow paper-item, #overflow core-item {
   background-image: url('images/paper.jpg');
   height: 48px;
   padding: 16px;
@@ -233,6 +233,10 @@ paper-input#password::shadow #input {
 
 paper-fab {
   background-color: #ff9100;
+}
+
+paper-fab[inactive] {
+  background-color: #ffd180
 }
 
 

@@ -157,7 +157,6 @@ class PassGen {
         pref = [CHAR_NUMBERS, CHAR_SYMBOLS];
         break;      
     }
-print('prefs: ' + pref.toString());
     return pref;
   }
 }

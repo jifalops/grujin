@@ -37,6 +37,7 @@
 
 <core-toolbar id='navheader'>  
   <span>Edit</span>
+  <span style='font-size: 8pt;'>(coming soon)</span>
 </core-toolbar>
 <core-menu>  
 
@@ -79,12 +80,12 @@
 <!--     <paper-item><paper-checkbox -->
 <!--       id='fulldomain' -->
 <!--       label='Use full domain'></paper-checkbox></paper-item> -->
-    <paper-item><paper-checkbox checked
+    <core-item style='color:#e0e0e0;'><paper-checkbox disabled
       id='remsettings'
-      label='Remember settings'></paper-checkbox></paper-item>   
-    <paper-item><paper-checkbox checked
+      label='Remember settings'></paper-checkbox></core-item>   
+    <core-item style='color:#e0e0e0;'><paper-checkbox disabled
       id='sync' 
-      label='Sync settings'></paper-checkbox></paper-item>    
+      label='Sync settings'></paper-checkbox></core-item>    
   </paper-menu-button>
 </core-toolbar>
 
@@ -100,7 +101,7 @@
   <paper-input id='secret' label='secret' validate='^.{4,}$' error='4 char min'></paper-input>     
   
   <!-- SLIDER -->
-  <paper-slider id='passlen' min='4' max='18' value='12' pin vertical end-justified layout></paper-slider>    
+  <paper-slider id='passlen' min='4' max='18' value='12' pin vertical end-justified layout></paper-slider>  
   
   <!-- CHARACTER BUTTONS -->
   <div class='charclass' horizontal center-justified layout center> 

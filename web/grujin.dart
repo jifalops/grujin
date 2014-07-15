@@ -1,17 +1,21 @@
 import 'dart:html';
-import 'dart:mirrors';
+import 'dart:async';
 import 'package:polymer/polymer.dart';
 import 'package:paper_elements/paper_input.dart';
 import 'package:paper_elements/paper_toast.dart';
 import 'package:paper_elements/paper_checkbox.dart';
 import 'package:paper_elements/paper_button.dart';
 import 'package:paper_elements/paper_fab.dart';
-import 'package:paper_elements/paper_dialog.dart';
+import 'package:paper_elements/paper_slider.dart';
 import 'package:lawndart/lawndart.dart';
-//import 'package:chrome/chrome_ext.dart' as chrome;
 import 'PassGen.dart';
 
 export 'package:polymer/init.dart';
+
+const int 
+  DEFAULT_PASS_LEN = 12,
+  SUBJECT_MIN_LEN = 3,
+  SECRET_MIN_LEN = 4;
 
 const String
   _DB_NAME         = "PassGen",
@@ -19,88 +23,129 @@ const String
   _KEY_PASS_LEN    = "passLen",    
   _KEY_SECRET      = "secret",
   _KEY_SAVE_SECRET = "saveSecret",
-//  _KEY_AUTO_HOST   = "autoHost",
   _KEY_USE_LOWER   = "useLower",
   _KEY_USE_UPPER   = "useUpper",
   _KEY_USE_NUMBERS = "useNumbers",
   _KEY_USE_SYMBOLS = "useSymbols";
 
-/** TODO will lead to version compatibility issues */
-final List<String> _TOP_LEVEL_DOMAINS = [
-  'biz', 'com', 'edu', 'gov', 'info', 'int', 
-  'mil', 'mobi', 'name', 'net', 'org', 'wiki', 'xxx'];
+PaperInput    _subject;
+PaperInput    _secret;
+PaperCheckbox _remsecret;
+PaperCheckbox _remsettings;
+PaperCheckbox _sync;       
+PaperButton   _upper;
+PaperButton   _lower;
+PaperButton   _numbers;
+PaperButton   _symbols;
+PaperSlider   _passlength;  
+PaperInput    _passcont;
+PaperFab      _mainbutton; 
+PaperToast    _toast;
 
-final HtmlElement   _subject    = querySelector('#subject');
-final HtmlElement   _secret     = querySelector('#secret');       // must be HtmlElement for .shadowRoot
-
-final HtmlElement _remsecret = querySelector('#remsecret');
-//final CheckboxInputElement _fulldomain = querySelector('#fulldomain');
-final HtmlElement _remsettings = querySelector('#remsettings');
-final HtmlElement _sync = querySelector('#sync');
-       
-final HtmlElement   _upper   = querySelector('#captoggle');
-final HtmlElement   _lower   = querySelector('#lowtoggle');
-final HtmlElement   _numbers   = querySelector('#numtoggle');
-final HtmlElement   _symbols   = querySelector('#symtoggle');
-
-final HtmlElement   _passlength   = querySelector('#passlen');  
-
-final HtmlElement   _passcont    = querySelector('#password');
-final HtmlElement   _mainbutton  = querySelector('paper-fab');     // must be HtmlElement for selector tag (?) 
-
-final HtmlElement    _toast       = querySelector('#toast');
-final DivElement    _leftpanel   = querySelector('#leftpanel');
-  
+final DivElement _leftpanel = querySelector('#leftpanel');
 
 final Store _store = new Store(_DB_NAME, _DB_STORE);
 final PassGen _pg = new PassGen();
-int _passlen = 12;
-
 
 void main() {                
-  // DOM is fully loaded.
-  _passcont.style.display = 'none';
+  // DOM is fully loaded (but not polymer necissarily).  
+  querySelector('#password').style.display = 'none';
+  _getShadowInput(querySelector('#secret')).attributes['type'] = 'password';
+  _getShadowInput(querySelector('#subject')).focus();
   
-  initPolymer().run(() {
-    // code here works most of the time
-    Polymer.onReady.then((_) {     
-      // some things must wait until onReady callback is called
-      // for an example look at the discussion linked below
-      
-        _getShadowInput(_secret).attributes['type'] = 'password';  
-        
-        _loadState();      
-           
-        _getShadowInput(_subject).focus();
+  initPolymer().run(() {  
+    // polymer mostly ready (most code works).
+    Polymer.onReady.then((_) {
+      // Ready!
+      _subject     = querySelector('#subject');
+      _secret      = querySelector('#secret');      
+      _remsecret   = querySelector('#remsecret');
+      _remsettings = querySelector('#remsettings');
+      _sync        = querySelector('#sync');             
+      _upper       = querySelector('#captoggle');
+      _lower       = querySelector('#lowtoggle');
+      _numbers     = querySelector('#numtoggle');
+      _symbols     = querySelector('#symtoggle');
+      _passlength  = querySelector('#passlen');  
+      _passcont    = querySelector('#password');
+      _mainbutton  = querySelector('paper-fab'); 
+      _toast       = querySelector('#toast');
+
+      _loadState().then((_) => _setListeners()); 
     });
   });  
 }  
 
+Future _loadState() {
+  return _store.open()
+    .then((_) => _store.getByKey(_KEY_PASS_LEN))
+    .then((value) {
+      if (value is num) {
+        _passlength.value = value;
+      } else {
+        _passlength.value = DEFAULT_PASS_LEN;
+      }
+    })
+    .then((_) => _store.getByKey(_KEY_USE_LOWER))
+    .then((value) {
+      if (value != null) _setActive(_lower, value == true);
+    })
+    .then((_) => _store.getByKey(_KEY_USE_UPPER))
+    .then((value) {
+      if (value != null) _setActive(_upper, value == true);
+    })
+    .then((_) => _store.getByKey(_KEY_USE_NUMBERS))
+    .then((value) {
+      if (value != null) _setActive(_numbers, value == true);
+    })
+    .then((_) => _store.getByKey(_KEY_USE_SYMBOLS))
+    .then((value) {
+      if (value != null) _setActive(_symbols, value == true);
+    })
+    .then((_) => _store.getByKey(_KEY_SAVE_SECRET))
+    .then((value) {      
+      if (value != null) _remsecret.checked = value == true;
+      if (_remsecret.checked) {
+        _store.getByKey(_KEY_SECRET)
+          .then((value) {
+            if (value != null) _secret.value = _pg.cipher(value, false);
+        });
+      }
+      
+      _updatePassword();
+//      if (!_canSubmit()) {
+//        if (document.activeElement == _subject || document.activeElement == _getShadowInput(_subject)) {
+//      
+//        }
+//      }
+    });  
+}
+
 void _setListeners() {
-  _lower.onClick.listen((e) => _toggleActive(_lower, _KEY_USE_LOWER));
-  _upper.onClick.listen((e) => _toggleActive(_upper, _KEY_USE_UPPER));
-  _numbers.onClick.listen((e) => _toggleActive(_numbers, _KEY_USE_NUMBERS));
-  _symbols.onClick.listen((e) => _toggleActive(_symbols, _KEY_USE_SYMBOLS));
-  
-  
+  _lower.onClick.listen((e) { _toggleActive(_lower, _KEY_USE_LOWER); _updatePassword(); });
+  _upper.onClick.listen((e) { _toggleActive(_upper, _KEY_USE_UPPER); _updatePassword(); });
+  _numbers.onClick.listen((e) { _toggleActive(_numbers, _KEY_USE_NUMBERS); _updatePassword(); });
+  _symbols.onClick.listen((e) { _toggleActive(_symbols, _KEY_USE_SYMBOLS); _updatePassword(); });
+    
   _mainbutton.onClick.listen((e) {
+    if (!_isActive(_mainbutton)) return;
     if (_passcont.style.display == 'none') {
+      _saveState();
       String pass = _generatePassword();
       _passcont.style.display = 'flex';
-      _passcont.attributes['inputValue'] = pass;
-      _mainbutton.attributes['icon'] = 'chevron-left';
+      _passcont.value = pass;
+      _mainbutton.icon = 'chevron-left';
       window.getSelection().selectAllChildren(_getShadowInput(_passcont));
     } else {
       _passcont.style.display = 'none';
-      _passcont.attributes['InputValue'] = '';
-      _mainbutton.attributes['icon'] = 'chevron-right';
+      _passcont.value = '';
+      _mainbutton.icon = 'chevron-right';
     }
   });
   
-  _remsecret.onChange.listen((e) => _store.open().then((_) {
-    bool checked = _isChecked(_remsecret);
-    _store.save(checked.toString(), _KEY_SAVE_SECRET);
-    if (checked) {
+  _remsecret.onChange.listen((e) => _store.open().then((_) {    
+    _store.save(_remsecret.checked, _KEY_SAVE_SECRET);
+    if (_remsecret.checked) {
       _doSaveSecret();
     } else {
       _store.removeByKey(_KEY_SECRET);
@@ -109,114 +154,86 @@ void _setListeners() {
   
   // TODO remsettings, sync
   
+    
+  _passlength.onChange.listen((e) {
+    _updatePassword();
+    _store.open().then((_) {       
+      _store.save(_passlength.value.toString(), _KEY_PASS_LEN);
+    });
+  });
   
   
-  _passlength.onClick.listen((e) => _store.open().then((_) {
-    String s = _passlength.shadowRoot.querySelector('#sliderKnobInner').attributes['value'];
-    _store.save(s, _KEY_PASS_LEN);
-    _passlen = int.parse(s);
-  }));
+  // text inputs control action button
+  _subject.onKeyDown.listen((e) {
+    _updatePassword();    
+  });
+  _secret.onKeyDown.listen((e) {
+    _updatePassword();
+  });
+  _subject.onKeyUp.listen((e) {
+    _updatePassword();
+  });
+  _secret.onKeyUp.listen((e) {
+    _updatePassword();
+  });  
+  
+  _getShadowInput(querySelector('#subject')).focus();
 }
 
-String _generatePassword() {  
-  _saveState();
+
+void _updatePassword() {
+  if (_canSubmit()) {    
+    _setActive(_mainbutton, true);
+    String pass = _generatePassword();
+    _passcont.style.display = 'flex';
+    _passcont.value = pass;
+    _mainbutton.icon = 'chevron-left';
+  } else {
+    _setActive(_mainbutton, false);
+    _passcont.style.display = 'none';
+    _passcont.value = '';
+    _mainbutton.icon = 'chevron-right';
+  }
   
+}
+
+bool _canSubmit() {
+  return _subject.inputValue.length >= SUBJECT_MIN_LEN 
+      && _secret.inputValue.length >= SECRET_MIN_LEN;
+}
+
+
+String _generatePassword() {   
   int charTypes = 0;
   if (_isActive(_lower)) charTypes |= PassGen.CHAR_LOWER;
   if (_isActive(_upper)) charTypes |= PassGen.CHAR_UPPER;
   if (_isActive(_numbers)) charTypes |= PassGen.CHAR_NUMBERS;
-  if (_isActive(_symbols)) charTypes |= PassGen.CHAR_SYMBOLS;
-  
-  var map1 = _subject.attributes;
-  var map2 = _getShadowInput(_subject).attributes;
- 
-  String subject = map2['value'];
-  String secret =  _secret.attributes['inputValue'];
-  return _pg.hashAndConvert(subject + secret, _passlen, charTypes);
+  if (_isActive(_symbols)) charTypes |= PassGen.CHAR_SYMBOLS;  
+  return _pg.hashAndConvert((_subject.inputValue + _secret.inputValue), _passlength.immediateValue, charTypes);  
 }
   
 
 
 void _doSaveSecret() {
-  String s = _getShadowInput(_secret).attributes['value'];
-  if (s == null) {
-//    _store.removeByKey(_KEY_SECRET);  TODO wait til save is working
-  } else {
-    _store.save(_pg.cipher(s, true), _KEY_SECRET);
-  }
+  _store.save(_pg.cipher(_secret.value, true), _KEY_SECRET);
 }
 
 
 void _saveState() {
   _store.open()
     .then((_) => _store.nuke())
-    .then((_) => _store.save(_passlength.shadowRoot.querySelector('#sliderKnobInner').attributes['value'], _KEY_PASS_LEN))
-    .then((_) => _store.save(_isChecked(_remsecret).toString(), _KEY_SAVE_SECRET))
+    .then((_) => _store.save(_passlength.value, _KEY_PASS_LEN))
+    .then((_) => _store.save(_remsecret.checked, _KEY_SAVE_SECRET))
     .then((_) => _store.save(_isActive(_lower).toString(), _KEY_USE_LOWER))
     .then((_) => _store.save(_isActive(_upper).toString(), _KEY_USE_UPPER))
     .then((_) => _store.save(_isActive(_numbers).toString(), _KEY_USE_NUMBERS))
     .then((_) => _store.save(_isActive(_symbols).toString(), _KEY_USE_SYMBOLS))
-//    .then((_) => _store.save(_autoHost.checked.toString(), _KEY_AUTO_HOST))
     .then((_) {
-      if (_isChecked(_remsecret) && _store.isOpen) {
+      if (_remsecret.checked && _store.isOpen) {
         _doSaveSecret();
       }
     });
 }
-
-void _loadState() {
-  _store.open()
-    .then((_) => _store.getByKey(_KEY_PASS_LEN))
-    .then((value) {
-      if (value != null) {
-        _passlen = int.parse(value);
-        _passlength.attributes['value'] = _passlen.toString();
-      }
-    })
-//    .then((_) => _addLengthOptions())
-    .then((_) => _store.getByKey(_KEY_USE_LOWER))
-    .then((value) {
-      if (value != null) _setActive(_lower, value == true.toString());
-    })
-    .then((_) => _store.getByKey(_KEY_USE_UPPER))
-    .then((value) {
-      if (value != null) _setActive(_upper, value == true.toString());
-    })
-    .then((_) => _store.getByKey(_KEY_USE_NUMBERS))
-    .then((value) {
-      if (value != null) _setActive(_numbers, value == true.toString());
-    })
-    .then((_) => _store.getByKey(_KEY_USE_SYMBOLS))
-    .then((value) {
-      if (value != null) _setActive(_symbols, value == true.toString());
-    })
-//    .then((_) => _store.getByKey(_KEY_AUTO_HOST))
-//    .then((value) {
-//      if (value != null) _autoHost.checked = value == true.toString();
-//    })
-    .then((_) => _store.getByKey(_KEY_SAVE_SECRET))
-    .then((value) {      
-      if (value != null) _setChecked(_remsecret, value == true.toString());
-      if (_isChecked(_remsecret)) {
-        _store.getByKey(_KEY_SECRET)
-          .then((value) {
-            if (value != null) _getShadowInput(_secret).attributes['value'] ='asdfa99999';// _pg.cipher(value, false);
-        });
-      }
-    })
-    
-    /*
-     * Workaround timing issue
-     */
-    .then((_) => _setListeners());
-}
-
-
-
-
-
-
-
 
 
 
@@ -226,18 +243,18 @@ HtmlElement _getShadowInput(HtmlElement e) {
 
 
 
-bool _isChecked(Element e) {
-  return e.attributes.containsKey('checked');
+bool _allowInactive(Element e) {  
+  if (e == _lower) {
+    return _isActive(_upper) || _isActive(_numbers) || _isActive(_symbols);  
+  } else if (e == _upper) {
+    return _isActive(_lower) || _isActive(_numbers) || _isActive(_symbols);  
+  } else if (e == _numbers) {
+    return _isActive(_lower) || _isActive(_upper) || _isActive(_symbols);  
+  } else if (e == _symbols) {
+    return _isActive(_lower) || _isActive(_upper) || _isActive(_numbers);  
+  }
+  return true;
 }
-
-void _setChecked(Element e, bool checked) {
-  if (checked) {
-    e.attributes['checked'] = 'true';   
-  } else {
-    e.attributes.remove('checked'); 
-  }  
-}
-
 
 bool _isActive(Element e) {
   return !e.attributes.containsKey('inactive');
@@ -247,18 +264,29 @@ void _setActive(Element e, bool active) {
   if (active) {
     e.attributes.remove('inactive');
   } else {
-    e.attributes['inactive'] = 'true';
+    if (_allowInactive(e)) e.attributes['inactive'] = 'true';
   }  
 }
 
-/* 
- * NOTE: only to be used in response to user action
- */
+// NOTE: only to be used in response to user action (since it stores the change).
 void _toggleActive(Element e, String key) {
   _setActive(e, !_isActive(e));   
-  _store.open().then((_) => _store.save(_isActive(e).toString(), key));
+  _store.open().then((_) => _store.save(_isActive(e), key));
 }
 
+
+
+//bool _isChecked(Element e) {
+//  return e.attributes.containsKey('checked');
+//}
+//
+//void _setChecked(Element e, bool checked) {
+//  if (checked) {
+//    e.attributes['checked'] = 'true';   
+//  } else {
+//    e.attributes.remove('checked'); 
+//  }  
+//}
 //
 //void _toggleOpened(Element e) {
 //  if (e.attributes['opened'] == 'true') {
