@@ -2,7 +2,6 @@ import 'dart:html';
 import 'dart:async';
 import 'package:polymer/polymer.dart';
 import 'package:paper_elements/paper_input.dart';
-import 'package:core_elements/core_input.dart';
 import 'package:paper_elements/paper_toast.dart';
 import 'package:paper_elements/paper_checkbox.dart';
 import 'package:paper_elements/paper_button.dart';
@@ -50,7 +49,6 @@ final PassGen _pg = new PassGen();
 
 void main() {                
   // DOM is fully loaded (but not polymer necissarily).  
-  window.resizeTo(400, 500);
   querySelector('#password').style.display = 'none';
   _getShadowInput(querySelector('#secret')).attributes['type'] = 'password';
   _getShadowInput(querySelector('#subject')).focus();
@@ -71,8 +69,8 @@ void main() {
       _passlength  = querySelector('#passlen');  
       _passcont    = querySelector('#password');
       _mainbutton  = querySelector('paper-fab'); 
-      _toast       = querySelector('#toast');      
-      
+      _toast       = querySelector('#toast');
+
       _loadState().then((_) => _setListeners()); 
     });
   });  
