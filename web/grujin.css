@@ -187,7 +187,7 @@ core-drawer-panel:not([narrow]) #navicon {
 
 .charclass paper-button[inactive] {
   opacity: 0.54;  
-  border:none;
+  border:1px solid #009688;
 }
 
 .charclass paper-button[inactive]:hover {
