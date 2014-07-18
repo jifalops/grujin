@@ -3,17 +3,22 @@
 
   "name": "Grujin",
   "description": "A simple offline password generator",
-  "version": "0.8.1",
-    
-  "app": {
-    "background": {
-      "scripts": ["background.js"]
-    }
+  "version": "0.8.1",      
+  
+  "browser_action": {
+    "default_icon": "images/lock16silver.png",
+    "default_popup": "grujin.html"    
   },
     
   "icons": {
     "128": "images/lock128silver.png",
     "48": "images/lock48silver.png",
     "16": "images/lock16silver.png"
-  } 
+  },
+  
+  "permissions": [
+    "activeTab"
+  ],
+  
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';"
 }

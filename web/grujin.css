@@ -1,6 +1,6 @@
 
 body {
-  font-family: RobotoDraft;  
+  font-family: Roboto;  
   background-image: url('images/eggshell.jpg');
 /*   background-size: cover; */
 }
@@ -96,6 +96,10 @@ core-drawer-panel:not([narrow]) #navicon {
   background-image: url('images/paper.jpg');
   height: 48px;
   padding: 16px;
+}
+
+#overflow paper-item[disabled], #overflow core-item[disabled] {
+  color:#e0e0e0;
 }
 
 #overflow paper-checkbox::shadow #ink[checked] {    /* remove selectors for unchecked changes */
@@ -244,3 +248,5 @@ paper-fab[inactive] {
 .toast {
   
 }
+
+
