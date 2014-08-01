@@ -1,5 +1,7 @@
 
 body {
+  width: 400px;
+  height: 500px;
   font-family: Roboto;  
   background-image: url('images/eggshell.jpg');
 /*   background-size: cover; */
@@ -24,6 +26,11 @@ core-toolbar {
 core-toolbar span {
   color:#fff;
 /*   opacity: 0.87; */
+}
+
+core-toolbar span.tag {
+  font-size: 8pt;
+  padding: 8px 0px;
 }
 
 #navicon, #overflow {
@@ -52,6 +59,8 @@ core-drawer-panel:not([narrow]) #navicon {
 
 /* -- LEFT PANEL MENU -- 
 */
+
+
 #leftpanel {
   /*  background:#fff; */
 }
@@ -88,6 +97,8 @@ core-drawer-panel:not([narrow]) #navicon {
 
 /* -- OVERFLOW MENU -- 
 */
+
+
 #overflow {  
   font-size:12pt;
 }
@@ -95,7 +106,7 @@ core-drawer-panel:not([narrow]) #navicon {
 #overflow paper-item, #overflow core-item {
   background-image: url('images/paper.jpg');
   height: 48px;
-  padding: 16px;
+  padding: 8px 16px;
 }
 
 #overflow paper-item[disabled], #overflow core-item[disabled] {
@@ -246,7 +257,7 @@ paper-fab[inactive] {
 
 
 .toast {
-  
+  display:none;
 }
 
 

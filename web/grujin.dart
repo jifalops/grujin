@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:polymer/polymer.dart';
 import 'package:paper_elements/paper_input.dart';
 import 'package:paper_elements/paper_toast.dart';
-import 'package:paper_elements/paper_item.dart';
+//import 'package:paper_elements/paper_item.dart';
 import 'package:paper_elements/paper_checkbox.dart';
 import 'package:paper_elements/paper_button.dart';
 import 'package:paper_elements/paper_fab.dart';
@@ -57,7 +57,8 @@ final List<String> _TLD = [
 ];
 
 void main() {                
-  // DOM is fully loaded (but not polymer necessarily).     
+  // DOM is fully loaded (but not polymer necessarily).       
+  
   initPolymer().run(() {  
     // polymer mostly ready (most code works).
     Polymer.onReady.then((_) {
@@ -81,11 +82,12 @@ void main() {
       _passcont.style.display = 'none';
       
       _getShadowInput(_secret).type = 'password';
+      _sync.disabled = true;      
       
       _loadState().then((_) {
         _updateSubmitButton();    
         _setListeners();
-      });  
+      });        
     }); 
   });  
 }  
@@ -152,22 +154,22 @@ void _loadPassOptions() {
 
 // for the chrome extension
 void _loadSubject() {
-//  var params = new chrome.TabsQueryParams()
-//    ..active = true
-//    ..currentWindow = true;
-//  chrome.tabs.query(params).then((tabs) {   
-//    String host = Uri.parse(tabs[0].url).host; 
-//    var parts = host.split('.');
-//    var len = parts.length;    
-//    if (len > 2) {
-//      int offset = 3;
-//      if (_TLD.contains(parts.last)) {
-//        offset = 2;
-//      }      
-//      host = parts.getRange(len - offset, len).join('.');       
-//    }
-//    _subject.value = host;
-//  });
+  var params = new chrome.TabsQueryParams()
+    ..active = true
+    ..currentWindow = true;
+  chrome.tabs.query(params).then((tabs) {   
+    String host = Uri.parse(tabs[0].url).host; 
+    var parts = host.split('.');
+    var len = parts.length;    
+    if (len > 2) {
+      int offset = 3;
+      if (_TLD.contains(parts.last)) {
+        offset = 2;
+      }      
+      host = parts.getRange(len - offset, len).join('.');       
+    }
+    _subject.value = host;
+  });
 }
 
 void _syncSettings() {
@@ -209,13 +211,14 @@ void _setListeners() {
   }));
   
   _remsettings.onClick.listen((e) => _statestore.open().then((_) {    
-    _statestore.save(_remsettings.checked, _KEY_SAVE_SETTINGS);
-    if (_remsettings.checked) {
-      _sync.disabled = false;      
-    } else {
-      _sync.checked = false;
-      _sync.disabled = true;
-    }
+    _statestore.save(_remsettings.checked, _KEY_SAVE_SETTINGS).then((_) {
+      if (_remsettings.checked) {
+        //_sync.disabled = false;      
+      } else {
+        //_sync.checked = false;
+        //_sync.disabled = true;
+      }
+    });
   }));
   
   

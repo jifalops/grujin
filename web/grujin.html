@@ -69,13 +69,13 @@
 <core-header-panel main>
 <core-toolbar id='mainheader'>
   <paper-icon-button id='navicon' icon='menu'></paper-icon-button>
-  <span flex>Paper Safe</span>
+  <span>Paper Safe</span><span class='tag' flex vertical self-start layout>beta</span>
   <paper-menu-button id='overflow' icon='more-vert' halign="right">               
     
     <!-- # OVERFLOW MENU # -->    
     
 <!--     TODO 2-item list -->
-    <paper-item><paper-checkbox
+    <paper-item><paper-checkbox checked
       id='remsecret'
       label='Remember secret'></paper-checkbox></paper-item>
 <!--     <paper-item><paper-checkbox -->
@@ -84,7 +84,7 @@
     <paper-item><paper-checkbox checked
       id='remsettings'
       label='Remember settings'></paper-checkbox></paper-item>   
-    <paper-item><paper-checkbox checked
+    <paper-item style='color:#e0e0e0'><paper-checkbox
       id='sync' 
       label='Sync settings'></paper-checkbox></paper-item>    
   </paper-menu-button>
