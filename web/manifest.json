@@ -4,7 +4,7 @@
   "name": "Paper Safe",
   "short_name": "grujin",
   "description": "The simple login utility.",
-  "version": "0.8.0",      
+  "version": "0.8.1",      
   
   "browser_action": {
     "default_icon": "images/pslightico16.png",

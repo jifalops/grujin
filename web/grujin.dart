@@ -5,6 +5,7 @@ import 'package:polymer/polymer.dart';
 import 'package:paper_elements/paper_input.dart';
 import 'package:paper_elements/paper_toast.dart';
 //import 'package:paper_elements/paper_item.dart';
+import 'package:core_elements/core_input.dart';
 import 'package:paper_elements/paper_checkbox.dart';
 import 'package:paper_elements/paper_button.dart';
 import 'package:paper_elements/paper_fab.dart';
@@ -17,7 +18,9 @@ export 'package:polymer/init.dart';
 
 const int 
   _SUBJECT_MIN_LEN = 3,
-  _SECRET_MIN_LEN = 4;
+  _SECRET_MIN_LEN = 4,
+  _WINDOW_WIDTH = 400,    // These correspond with CSS height/width on <body>
+  _WINDOW_HEIGHT = 500;
 
 const String
   _DB_NAME            = "PaperSafe",
@@ -61,8 +64,11 @@ void main() {
   
   initPolymer().run(() {  
     // polymer mostly ready (most code works).
-    Polymer.onReady.then((_) {
+    Polymer.onReady.then((_) {      
       // Ready!
+      
+      window.resizeTo(_WINDOW_WIDTH, _WINDOW_HEIGHT);
+      
       _subject     = querySelector('#subject');
       _secret      = querySelector('#secret');      
       _remsecret   = querySelector('#remsecret');
@@ -82,11 +88,28 @@ void main() {
       _passcont.style.display = 'none';
       
       _getShadowInput(_secret).type = 'password';
-      _sync.disabled = true;      
+      _sync.disabled = true;   
+      
+//      _subject.tabIndex = 0;
+//      _secret.tabIndex = 1;
+//      _passlen.tabIndex = 2;
+//      _upper.tabIndex = 3;
+//      _lower.tabIndex = 4;
+//      _numbers.tabIndex = 5;
+//      _symbols.tabIndex = 6;
+//      _mainbutton.tabIndex = 7;
       
       _loadState().then((_) {
         _updateSubmitButton();    
         _setListeners();
+        
+        if (_subject.inputValue.length == 0) {
+          _getShadowInput(_subject).focus();
+        } else if (_secret.inputValue.length == 0) {
+          _getShadowInput(_secret).focus(); 
+        } else {
+          _passlen.focus();                                   // TODO doesn't focus (arrow keys should work)
+        }
       });        
     }); 
   });  
@@ -172,6 +195,22 @@ void _loadSubject() {
   });
 }
 
+// empty only
+Future _fillPasswordInputs(final String pass) {  
+    return chrome.tabs.executeScript(new chrome.InjectDetails(
+      code: 
+'''
+      var inputs = document.getElementsByTagName("input");    
+      for (var i=0; i<inputs.length; i++) {
+        if (inputs[i].type.toLowerCase() == "password" && inputs[i].value.length == 0) {
+          inputs[i].value = "$pass";
+        }
+      }
+'''      
+    ));
+}
+
+
 void _syncSettings() {
   if (!_sync.checked || !_remsettings.checked) return;
   // TODO chrome sync
@@ -185,19 +224,7 @@ void _syncSettings() {
 
 void _setListeners() {   
   _mainbutton.onClick.listen((e) {
-    if (!_isActive(_mainbutton)) return;
-    if (_passcont.style.display == 'none') {
-      _saveState();
-      String pass = _generatePassword();
-      _passcont.style.display = 'flex';
-      _passcont.value = pass;
-      _mainbutton.icon = 'chevron-left';
-      window.getSelection().selectAllChildren(_getShadowInput(_passcont));        //TODO doesn't highlight text
-    } else {
-      _passcont.style.display = 'none';
-      _passcont.value = '';
-      _mainbutton.icon = 'chevron-right';
-    }
+    _doSubmit();
   });
   
   _lower.onClick.listen((e) => _toggleActive(_lower, _KEY_USE_LOWER));
@@ -249,11 +276,13 @@ void _setListeners() {
   
   // text inputs control action button
   _subject.onKeyDown.listen((e) {
+    
     _loadPassOptions();
     _updateSubmitButton();    
   });
   _secret.onKeyDown.listen((e) {
     _updateSubmitButton();
+    
   });
   _subject.onKeyUp.listen((e) {
     _loadPassOptions();
@@ -263,7 +292,31 @@ void _setListeners() {
     _updateSubmitButton();
   });  
   
-  _getShadowInput(_subject).focus();
+  
+  document.onKeyDown.listen((e) {
+    if (e.keyCode == KeyCode.ENTER) {
+      _doSubmit();
+    }
+  });
+  
+}
+
+void _doSubmit() {
+  if (!_isActive(_mainbutton)) return;
+  if (_passcont.style.display == 'none') {
+    _saveState();
+    String pass = _generatePassword();
+    _passcont.style.display = 'flex';
+    _passcont.value = pass;      
+    _mainbutton.icon = 'chevron-left';
+    _fillPasswordInputs(pass);
+    //_getShadowInput(_passcont).select();        //TODO doesn't highlight text      
+//      (_passcont as InputElement).select();
+  } else {
+    _passcont.style.display = 'none';
+    _passcont.value = '';
+    _mainbutton.icon = 'chevron-right';
+  }
 }
 
 void _updateSubmitButton() {
